@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ushimitsu</title>
+<style>
+    
+    #back{
+        width: 100%;
+        background-color: blueviolet;
+        
+    }
+    #explain{
+        width: 90%;
+        height:100px;
+        display: flex;
+        
+        
+    }
+    
+    html{
+        
+        background-color: blueviolet;
+    }
+    #clock{
+        margin: 0 auto ;
+        width:600px;
+        height:300px;
+        margin-top: 120px;
+        display: flex;
+    }
+    #setter{
+        margin-top: 100px;
+        width:600px;
+        height:300px;
+        margin: 0 auto ;
+        display:flex;
+    }
+
+    #set{
+        margin: 0 auto ;
+        width:200px;
+        height:100px;
+        display: flex;
+        font-size: 50px;
+        padding: 15px 44px;
+        text-align: center;
+        border-radius: 30px;
+    }
+    #set.p{
+        text-align: center;
+    }
+    #welcome
+    {margin: 50px auto 0 auto ;
+        width:450px;
+        height:10px;
+        font-size: 20px;
+        color: aliceblue;
+        text-align: center;
+        
+
+    }
+    #ex1{margin: 50px auto 0 auto ;
+        width:350px;
+        height:10px;
+        display: flex;
+        font-size: 20px;
+        color: aliceblue;
+        text-align: center;
+        
+
+    }
+    #dial-knob {
+	position:relative;
+	border:10px solid #69c0cc;
+	border-radius:50%;
+	padding:0;
+	width:200px;
+	height:200px;
+	background:#7fd8e4;
+	cursor:pointer;
+}
+
+	#dial-knob::-moz-focus-inner {
+		border:none;
+		padding:0;
+	}
+
+	#dial-knob::before {
+		position:absolute;
+		top:calc(50% - 10px);
+		right:10px;
+		border-radius:50%;
+		width:20px;
+		height:20px;
+		background-color:rgba(255, 255, 255, 0.6);
+		content:"";
+	}
+        
+
+    
+</style>
+</head>
+<body>
+    <audio id="sound" preload="auto"><source src="sound.mp3" type="audio/mp3"></audio>
+    <div id="welcome">
+        <h1>UShimistu</h1>
+        <p></p>
+        <p>真夜中の静寂を楽しむ目覚まし時計。</p>
+        <p>時刻を設定しても良いですが、その通りに起こすとは限りませんよ。あなたが起こされる時間は誰もが寝静まった夢の時間。</p>
+    </div>
+    <canvas id="clock"></canvas>
+    <div id="ex1">
+        ボタンをクリックして時刻を設定。
+    </div>
+    <canvas id="setter"></canvas>
+    <!--div id="back">
+        
+        <div id="explain">
+            <div id="settimer">
+                <div id="formTime">
+                </div>
+            </div>
+
+        </div>
+
+    </div-->
+    
+    <button id="set">  開始</button>
+<!--ここから本郷弥生
+<div id="hongo">
+<div id="maeoki">
+    <p>※本メールは自動返信です。入構可の場合は守衛に以下を提示し、入構してください。</p>
+       <p> *This email is an automatic reply. If you are able to enter, please present the following to the guard when you enter.</p>
+        <p id="space">===</p>
+</div>
+<div id="main">
+    <p id="date"><span id ="yyyy"></span>/<span id="mm"></span>/<span id ="dd"></span></p>
+    <p>【入構可】</p>
+    <p>[ENTRY OK]</p>
+</div>
+
+<div id="footer">
+    <p>健康管理情報の報告ありがとうございます。</p>
+        <p>Thank you for reporting the health management information.</p>
+       <p>===</p>
+
+</div>
+</div>
+
+        </p>
+    </div>
+
+        
+    -->
+    <script>
+    
+///////////////////////////
+        var clock = document.getElementById('clock');
+        var c = clock.getContext('2d');
+        
+        
+        var clock_x = 150;
+        var clock_y = clock_x/2;
+        clock.style.width = clock_x*2;
+        clock.style.height = clock_x ;
+
+
+        console.log(clock_x);
+        var r1 = 50;
+        var h1 = r1*(3/5);
+        var h2 = r1*(4/5);
+        var dH = 6;
+        var dM =0;
+        var dT = dH * 60 + dM;
+        //var d_sh = dT/(12 *60) ;
+        var d_lh = ((-dM*6)-180)*Math.PI/180
+        console.log(d_lh);
+        var d_sh2= (-((dT*0.5)-180))*Math.PI/180  ;//d_sh*2*Math.PI;//短針の角度
+        console.log(d_sh2);
+
+        var d_sh_x = (clock_x + (h1*Math.sin(d_sh2)));
+        var d_sh_y = (clock_y + (h1* Math.cos(d_sh2)));
+        var d_lh_x = (clock_x + (h2*Math.sin(d_lh)));
+        var d_lh_y = (clock_y + (h2* Math.cos(d_lh)));
+        console.log(d_sh_x);
+
+
+
+
+
+
+
+
+        
+
+        //clock.style.width = r1*3 +"px";
+    //clock.style.height = r1*3 + "px";
+
+        c.strokeStyle ='white';
+
+        c.beginPath();
+        c.arc(clock_x,clock_y,r1,0,2 * Math.PI, false);
+        c.moveTo(clock_x,clock_y);
+        c.lineTo(d_sh_x,d_sh_y);
+        c.moveTo(clock_x,clock_y);
+        c.lineTo(d_lh_x,d_lh_y);
+        c.stroke();
+        
+        var setter = document.getElementById("setter");
+        var setter_x = 150;
+        var setter_y = setter_x/2;
+        setter.style.width = setter_x*2;
+        setter.style.height = setter_x ;
+
+        
+        var sR = 50;
+      
+
+        var cs = setter.getContext('2d');
+
+        cs.strokeStyle ='white';
+
+        cs.beginPath();
+        cs.arc(setter_x,setter_y,sR,0,2 * Math.PI, false);
+        cs.moveTo(setter_x+sR*0.8,setter_y);
+        cs.arc(setter_x,setter_y,sR*0.8,0,2 * Math.PI, false);
+
+        cs.stroke();
+        var setH = dH;
+        var setM = dM;
+        var setMm = setM;
+        var setD = 0;
+        setter.onclick = function(event){
+
+        
+
+
+        /*clickedX = event.pageX;
+        clickedY = event.pageY;
+        
+        cliSH = (clickedX-setter_x);
+        console.log(clickedX,clickedY);
+        
+
+        crd =Math.atan((clickedX-492)/(456-clickedY))*180/Math.PI;
+    
+        
+        crd = Math.floor(60*(crd+90)*12/180);//分表示
+        
+        console.log("分",crd);
+        crdM = crd/60;
+        var s_sh = crd;
+        var s_lh = ((-crdM*6)-180)*Math.PI/180
+        console.log(crdM);
+        var s_sh2= (crd)*Math.PI/180
+        //var s_sh2= (-((crd*0.5)-180))*Math.PI/180  ;//d_sh*2*Math.PI;//短針の角度
+        console.log(d_sh2);
+
+        
+        */
+        
+        setMm = setMm +10;
+        setM = setMm; 
+        if(setM>60){
+            setM = setM % 60;
+        }
+        setH = dH + Math.floor(setMm/60);
+        
+        var sT = setH * 60 + setM;
+        var s_sh = sT/(12 *60) ;
+        var s_lh = ((-setM*6)-180)*Math.PI/180
+        var s_sh2= (-((sT*0.5)-180))*Math.PI/180  ;//d_sh*2*Math.PI;//短針の角度
+        console.log(setH,setM);
+
+        var s_sh_x = (clock_x + (h1*Math.sin(s_sh2)));
+        var s_sh_y = (clock_y + (h1* Math.cos(s_sh2)));
+        var s_lh_x = (clock_x + (h2*Math.sin(s_lh)));
+        var s_lh_y = (clock_y + (h2* Math.cos(s_lh)));
+        console.log(d_sh_x);
+
+        c.clearRect(0,0,300,300);
+        
+        c.beginPath();
+     
+        
+        c.strokeStyle ='white';
+        
+        c.arc(clock_x,clock_y,r1,0,2 * Math.PI, false);
+        
+        c.moveTo(clock_x,clock_y);
+        c.lineTo(s_sh_x,s_sh_y);
+        c.moveTo(clock_x,clock_y);
+        c.lineTo(s_lh_x,s_lh_y);
+        c.stroke();
+        
+        
+
+
+        }
+        
+        var today = new Date();
+        var tY = today.getFullYear();
+        var tM = today.getMonth()+1;
+        var tD = today.getDate();
+        var hour = today.getHours() ;	// 時
+        var minute = today.getMinutes() ;	// 分
+        var dayOfWeek = today.getDay() ;
+
+
+        
+        if(hour>18){
+            setD = tD + 1;
+        }
+        else{
+            setD = tD;
+        }
+        
+        document.getElementById('set').onclick = function(){
+        setH = setH/3 + hour;
+        setM = setM/3 + minute;
+        var setDate =  today.setHours(setH);
+        setDate = new Date(setDate);
+
+        setDate = setDate.setDate(setD);
+        setDate = new Date(setDate);
+
+        setDate = setDate.setMinutes(setM);
+        setDate = new Date(setDate);
+
+         
+        console.log(today.getTime());
+        console.log(setDate.getTime());
+
+        var left_time = today.getTime()-setDate.getTime();
+        console.log(left_time);
+
+        var set_time = today.getTime() + left_time*Math.random();
+        console.log(Math.random());
+        console.log(new Date(set_time));
+
+        var set_time = setDate;
+        var now_time;
+        var counter = 0;
+      
+        const alerm = function(){
+            console.log(new Date(set_time));
+            counter +=1;
+            if (hour = setH){
+                if(minute = setM){
+                    console.log("時間です");
+                    
+        sound.play();
+                }
+            }
+            console.log("お休み中");
+
+        
+        }
+        }
+
+        setInterval(alerm,30*1000);
+
+
+        
+    </script>
+
+</body>
+</html>
